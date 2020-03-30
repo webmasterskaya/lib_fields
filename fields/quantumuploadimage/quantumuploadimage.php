@@ -33,9 +33,20 @@ class JFormFieldQuantumuploadimage extends JFormFieldQuantumupload
 	protected function getLayoutData()
 	{
 		$layout = new FileLayout('pickimage', __DIR__ . DIRECTORY_SEPARATOR . 'layouts');
-		$other = $layout->render(parent::getLayoutData());
+		$parentData = parent::getLayoutData();
 
-		return array_merge(parent::getLayoutData(),
+		$parentData['cssClass'] .= ' quantumuploadimage-field';
+		if(isset($this->dropAreaHidden) && (int)$this->dropAreaHidden)
+		{
+			$parentData['cssClass'] .= ' quantumuploadimage-field-preview-hidden';
+		}
+
+		$other = $layout->render(array_merge($parentData,
+			[
+
+			]));
+
+		return array_merge($parentData,
 			[
 				'other' => $other,
 			]
@@ -44,7 +55,15 @@ class JFormFieldQuantumuploadimage extends JFormFieldQuantumupload
 
 	public function getInput()
 	{
-		echo parent::getInput();
+		try
+		{
+			$this->__set('dropAreaHidden', $this->getAttribute('dropAreaHidden', true));
+			return parent::getInput();
+		}
+		catch (Exception $e)
+		{
+			echo $e->getMessage();
+		}
 	}
 
 }
